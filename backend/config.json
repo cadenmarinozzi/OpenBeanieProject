@@ -1,0 +1,22 @@
+{
+    "process_rate": 0.01,
+    "history": {
+        "persistent": true,
+        "persist_file": "history.json"
+    },
+    "network": {
+        "pi": {
+            "ip": "192.168.5.47",
+            "port": 5000
+        },
+        "viewer": {
+            "port": 8081
+        },
+        "client": {
+            "port": 8080
+        }
+    },
+    "tts": {
+        "stream": true
+    }
+}

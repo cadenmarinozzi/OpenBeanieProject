@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <img></img>
+        <script type="module">            
+            const img = document.querySelector('img')
+
+            img.width = window.innerWidth;
+            img.height = window.innerHeight;
+
+            const ws = new WebSocket(`ws://localhost:<VIEWER_PORT>`)
+
+            ws.addEventListener('open', () => {
+                console.log('Connected to the server')
+            })
+
+            ws.addEventListener('message', (message) => {
+                img.src = message.data
+            });
+        </script>
+    </body>
+</html>
