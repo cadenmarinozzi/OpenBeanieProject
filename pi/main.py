@@ -53,7 +53,7 @@ async def handleServer(websocket):
         currTime = getTime()
 
         if currTime - lastTime > 1:
-            print(temperature)
+            print(f"{temperature} °C")
 
             lastTime = currTime
 
@@ -72,7 +72,7 @@ async def handle(websocket):
 
 
 async def wsClient(IP):
-    server = await websockets.serve(handle, IP, 8082)
+    server = await websockets.serve(handle, IP, 5000)
 
     async with server:
         await asyncio.Future()

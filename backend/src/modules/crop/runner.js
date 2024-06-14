@@ -1,4 +1,5 @@
 import spawn from 'child_process';
+import colors from 'colors/safe.js';
 
 export const runCropper = async () => {
 	return new Promise((resolve, reject) => {
@@ -14,7 +15,7 @@ export const runCropper = async () => {
 		});
 
 		pythonProcess.stderr.on('data', (data) => {
-			console.error(data.toString());
+			console.error(colors.red(data.toString()));
 			reject();
 		});
 	});

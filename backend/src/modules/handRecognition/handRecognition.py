@@ -2,6 +2,7 @@ import cv2
 import mediapipe as mp
 import asyncio
 import websockets
+import sys
 
 mpHands = mp.solutions.hands
 hands = mpHands.Hands()
@@ -26,10 +27,18 @@ async def handle(websocket):
 
 
 async def wsClient(IP):
+    print("Started")
     server = await websockets.serve(handle, IP, 8082)
 
-    async with server:
-        await asyncio.Future()
+    try:
+        asyncio.run(wsClient("127.0.0.1"))
+
+        async with server:
+            await asyncio.Future()
+
+    except KeyboardInterrupt:
+        server.close()
+        sys.exit()
 
 
 asyncio.run(wsClient("127.0.0.1"))

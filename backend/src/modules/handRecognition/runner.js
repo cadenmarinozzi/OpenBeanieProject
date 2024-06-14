@@ -3,6 +3,7 @@ import WebSocket from 'ws';
 import { createWebsocketURL } from '../utils/websockets.js';
 import { getConfig } from '../config/index.js';
 import colors from 'colors/safe.js';
+import kill from 'tree-kill';
 
 const config = getConfig();
 const RECOGNIZER_PORT = config.network.recognizer.port;
@@ -37,46 +38,75 @@ export class HandRecognition {
 		// }
 	};
 
-	initWebsocket = () => {
-		try {
-			this.ws = new WebSocket(
-				createWebsocketURL('127.0.0.1', RECOGNIZER_PORT)
-			);
+	handleOpen = () => {
+		console.log(colors.green('Python process websocket connected'));
+	};
 
-			// this.ws.on('message', this.handleMessage);
-		} catch (error) {
-			console.log(
-				colors.red('Failed to connect to recognizer websocket')
-			);
+	initWebsocket = async () => {
+		return new Promise((resolve) => {
+			try {
+				this.ws = new WebSocket(
+					createWebsocketURL('127.0.0.1', RECOGNIZER_PORT)
+				);
 
-			setTimeout(() => {
-				this.initWebsocket();
-			}, 3000);
+				console.log(colors.green('Started recognizer websocket'));
+
+				this.ws.on('open', () => {
+					this.handleOpen();
+					resolve();
+				});
+
+				// this.ws.on('message', this.handleMessage);
+			} catch (err) {
+				console.log(
+					colors.red('Failed to connect to recognizer websocket')
+				);
+				console.log(colors.red(err));
+
+				setTimeout(() => {
+					this.initWebsocket();
+				}, 3000);
+			}
+		});
+	};
+
+	killProcess = () => {
+		if (this.pythonProcess) {
+			const pid = this.pythonProcess.pid;
+
+			console.log(colors.blue(`Killing process: ${pid}`));
+
+			this.pythonProcess.stdin.pause();
+			kill(pid);
 		}
 	};
 
 	initPython = async () => {
-		process.on('SIGINT', () => {
-			if (this.pythonProcess) this.pythonProcess.exit();
-		});
+		return new Promise((resolve) => {
+			try {
+				process.on('SIGINT', this.killProcess);
 
-		return new Promise((resolve, reject) => {
-			this.pythonProcess = spawn('python', [
-				'src/modules/handRecognition/handRecognition.py',
-			]);
+				this.pythonProcess = spawn('python', [
+					'src/modules/handRecognition/handRecognition.py',
+				]);
 
-			this.pythonProcess.stdout.on('data', (data) => {
-				if (data.toString().includes('Hand detected')) {
-					resolve(true);
-				} else {
-					resolve(false);
-				}
-			});
+				console.log(colors.green('Started python process'));
 
-			this.pythonProcess.stderr.on('data', (data) => {
-				console.error(data.toString());
-				reject();
-			});
+				this.pythonProcess.stdout.on('data', (data) => {
+					if (data.toString().includes('Started')) {
+						console.log(
+							colors.green('Python process websocket open')
+						);
+						resolve();
+					}
+				});
+			} catch (err) {
+				console.log('Error starting python');
+				console.log(colors.red(err));
+
+				this.killProcess();
+				this.initPython();
+			}
 		});
 	};
 }

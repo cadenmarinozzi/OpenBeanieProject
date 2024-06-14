@@ -21,10 +21,11 @@ const HISTORY_PERSIST_FILE = config.history.persist_file;
 const RECONNECT_DELAY = config.reconnect_delay;
 
 export default class ServerWebSocket {
-	constructor(viewer) {
+	constructor(viewer, handRecognizer) {
 		this.lastDataTime = 0;
 		this.history = {};
 		this.viewer = viewer;
+		this.handRecognizer = handRecognizer;
 	}
 
 	addToHistory = (completion) => {
@@ -149,18 +150,14 @@ export default class ServerWebSocket {
 			this.doTTS(completion);
 
 			this.needsStatusSent = true;
-		} catch (e) {
-			console.error(e);
+		} catch (err) {
+			console.error(colors.red(err));
 		}
 	};
 
 	init = async () => {
 		try {
 			this.ws = new WebSocket(createWebsocketURL(PI_IP, PI_PORT));
-
-			this.handRecognizer = new HandRecognition();
-			await this.handRecognizer.initPython();
-			this.handRecognizer.initWebsocket();
 
 			this.ws.on('open', this.handleOpen);
 			this.ws.on('message', this.handleMessage);
@@ -175,7 +172,9 @@ export default class ServerWebSocket {
 			);
 		} catch (err) {
 			console.log(colors.red('Server WebSocket failed to start'));
-			console.log(err);
+			console.log(colors.red(err));
+
+			this.handRecognizer.killProcess();
 
 			setTimeout(() => {
 				this.init();
