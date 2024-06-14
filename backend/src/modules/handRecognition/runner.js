@@ -57,7 +57,7 @@ export class HandRecognition {
 
 	initPython = async () => {
 		process.on('SIGINT', () => {
-			if (this.pythonpPocess) this.pythonProcess.exit();
+			if (this.pythonProcess) this.pythonProcess.exit();
 		});
 
 		return new Promise((resolve, reject) => {
