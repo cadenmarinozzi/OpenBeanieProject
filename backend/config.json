@@ -1,12 +1,13 @@
 {
-    "process_rate": 0.01,
+    "process_rate": 0.1,
+    "reconnect_delay": 3000,
     "history": {
-        "persistent": true,
+        "persistent": false,
         "persist_file": "history.json"
     },
     "network": {
         "pi": {
-            "ip": "192.168.5.47",
+            "ip": "192.168.1.62",
             "port": 5000
         },
         "viewer": {
@@ -14,6 +15,9 @@
         },
         "client": {
             "port": 8080
+        },
+        "recognizer": {
+            "port": 8082
         }
     },
     "tts": {

@@ -1,21 +1,448 @@
 <!DOCTYPE html>
 <html>
-    <body>
-        <img></img>
-        <script type="module">            
-            const img = document.querySelector('img')
+    <head>
+        <title>Beanie Project Preview</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Tiny5&display=swap');
 
-            img.width = window.innerWidth;
-            img.height = window.innerHeight;
+            * {
+                margin: 0;
+                padding: 0;
+
+                box-sizing: border-box;
+
+                font-family: Tiny5, sans-serif;
+                color: inherit;
+            }
+
+            *:not(span) {
+                outline: 0.5px solid white;
+            }
+
+            body {
+                background: rgb(15, 15, 15);
+                color: rgb(242, 242, 242);
+            }
+
+            .container {
+                display: flex;
+                flex-direction: column;
+
+                width: 100vw;
+                height: 100vh;
+
+                border: 1px solid rgb(242, 242, 242);
+
+                overflow: clip;
+            }
+
+            .content {
+                display: flex;
+                flex-direction: row;
+
+                width: 100%;
+                height: 100%;
+            }
+
+            .image { 
+                width: 100%;
+                height: calc(100% - 18px - 20px);
+
+                object-fit: contain;
+
+                padding: 10px;
+            }
+
+            .details {
+                display: flex;
+                flex-direction: column;
+
+                width: 100%;
+            }
+
+            .header {
+                display: flex;
+                flex-direction: row;
+
+                justify-content: space-between;
+
+                gap: 10px;
+            }
+
+            .header-section {
+                padding: 10px;
+
+                display: flex;
+                flex-direction: row;
+
+                gap: 10px;
+            }
+
+            .online {
+                color:rgb(107, 142, 238);
+            }
+
+            .offline {
+                color: rgb(238, 107, 107);
+            }
+
+            .status {                
+                display: flex;
+                flex-direction: column;
+
+                width: 100%;
+            }
+
+            .status-header {
+                padding: 10px;
+            }
+
+            .status-value {
+                padding: 10px;
+            }
+            
+            .statuses {
+                display: flex;
+                flex-direction: column;
+
+                width: 100%;
+            }
+
+            .system-waiting {
+                color: rgb(107, 142, 238);
+            }
+
+            .system-disconnected {
+                color: rgb(238, 107, 107);
+            }
+
+            .system-processing {
+                color: rgb(143, 238, 114);
+            }
+
+            .completion {
+                color: rgb(238, 227, 107);
+            }
+
+            .prompt {
+                color: rgb(238, 227, 107);
+            }
+
+            .status-row {
+                display: flex;
+                flex-direction: row;
+
+                width: 100%;
+            }
+
+            .authors {
+                color: rgb(238, 227, 107);
+            }
+
+            .network-graph {
+                width: 100%;
+                height: 100%;
+            }
+
+            .status-section {
+                height: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class="header">
+                <div class='header-section'>
+                <span class="title">OPEN BEANIE PROJECT DASHBOARD</span>
+                <span class="authors">BY: CADEN MARINOZZI & RYAN KUNKEL</span>
+            </div>
+            <div class="header-section">
+                <span class='offline websocket-status'>WS://LOCALHOST:<VIEWER_PORT></span>
+                <span class='offline online-label'>OFFLINE</span>
+                <span class="time"></span>
+            </div>
+            </div>
+            <div class='content'>
+                <img class="image" src="../9edmy76pp5ab1.png"></img>
+                    <div class="statuses">
+                        <div class='status-section'>
+                            <div class="status-row">
+                                <div class='status'>
+                                    <div class='status-header'>
+                                        <span class="status-title">SYSTEM STATUS</span>
+                                    </div>
+                                    <span class="status-value system-status system-disconnected">DISCONNECTED</span>
+                                </div>
+                                <div class="status">
+                                    <div class='status-header'>
+                                        <span class="status-title">GESTURE STATE</span>
+                                    </div>
+                                    <span class="status-value gesture-state"></span>
+                                </div>
+                            </div>
+                            <div class="status-row">
+                                <div class="status">
+                                    <div class='status-header'>
+                                        <span class="status-title">PROMPT</span>
+                                    </div>
+                                    <span class="status-value prompt"></span>
+                                </div>
+                            </div>
+                            <div class="status-row">
+                                <div class='status'>
+                                    <div class='status-header'>
+                                        <span class="status-title">COMPLETION</span>
+                                    </div>
+                                    <span class="status-value completion"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="status-section">
+                            <div class="status-row">
+                                <div class='status'>
+                                    <div class='status-header'>
+                                        <span class="status-title">NETWORK GRAPH</span>
+                                    </div>
+                                    <canvas class="network-graph"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="module">    
+            const networkGraph = document.querySelector(".network-graph")
+            const ctx = networkGraph.getContext('2d')
+            const ratio = window.devicePixelRatio;
+
+            const width = window.innerWidth / 2;
+            const height = window.innerHeight / 2;
+
+            networkGraph.width = width * ratio;
+            networkGraph.height = height * ratio;
+            networkGraph.style.width = width + "px";
+            networkGraph.style.height = height + "px";
+            ctx.scale(ratio, ratio);
+            
+            ctx.textBaseline = "middle";
+
+            ctx.fillStyle = 'rgb(15, 15, 15)';
+            ctx.strokeStyle = 'rgb(242, 242, 242)';
+            ctx.lineWidth = 1
+            ctx.font = '11px Arial, sans-serif';
+
+            // Draw key in top left
+            ctx.fillStyle = 'rgb(100, 100, 100)';
+            ctx.fillRect(10, 10, 10, 10);
+            ctx.strokeRect(10, 10, 10, 10);
+            ctx.fillText('INACTIVE', 25, 15);
+
+            ctx.fillStyle = 'rgb(107, 142, 238)';
+            ctx.fillRect(10, 30, 10, 10);
+            ctx.strokeRect(10, 30, 10, 10);
+            ctx.fillText('ON', 25, 35);
+
+            ctx.fillStyle = 'rgb(143, 238, 114)';
+            ctx.fillRect(10, 50, 10, 10);
+            ctx.strokeRect(10, 50, 10, 10);
+            ctx.fillText('ACTIVE', 25, 55);
+
+            ctx.textAlign = "center";
+
+            function getTextWidth(text, font) {
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+
+                context.font = font || getComputedStyle(document.body).font;
+
+                return context.measureText(text).width;
+            }
+
+            class Node {
+                constructor(value, x=0, y=0) {
+                    this.value = value;
+
+                    this.x = x;
+                    this.y = y;
+
+                    // this.width = getTextWidth(this.value, 'tiny5');
+                    this.width = 75;
+                    this.height = 30;
+
+                    this.children = [];
+                    this.connections = []
+                }
+
+                addConnection = (node) => {
+                    this.connections.push(node);
+                }
+
+                insert = (node) => {
+                    if (this.children.length === 0)
+                        node.x = this.x - 60; 
+                    else
+                        node.x = this.children[this.children.length - 1].x + 160;
+                    
+                    node.y = this.y + this.height + 50;
+                    node.parent = this;
+
+                    this.children.push(node);
+                }
+                
+                drawConnections() {
+                    const paddingX = 20;
+                    const paddingY = 5;
+
+                    const centerX = this.x + this.width / 2 + paddingX;
+                    const centerY = this.y + this.height / 2 + paddingY;
+
+                    if (this.parent) {
+                        ctx.beginPath();
+                        ctx.moveTo(centerX, centerY);
+                        ctx.lineTo(this.parent.x + this.parent.width / 2 + paddingX, this.parent.y + this.parent.height + paddingY);
+                        ctx.stroke();
+                        ctx.closePath();
+                    }
+
+                    this.connections.forEach((node) => {
+                        ctx.beginPath();
+                        ctx.moveTo(centerX, centerY);
+                        ctx.lineTo(node.x + node.width / 2 + paddingX, node.y + node.height / 2 + paddingY);
+                        ctx.stroke();
+                        ctx.closePath();
+                    })
+
+                    this.children.forEach(child => child.drawConnections())
+                }
+
+                draw() {
+                    const paddingX = 20;
+                    const paddingY = 5;
+
+                    const centerX = this.x + this.width / 2 + paddingX;
+                    const centerY = this.y + this.height / 2 + paddingY;
+
+                    ctx.fillStyle = 'rgb(15, 15, 15)';
+                    ctx.strokeStyle = this.active ? 'rgb(143, 238, 114)' :  this.on ? 'rgb(107, 142, 238)' : 'rgb(100, 100, 100)';
+                    ctx.beginPath();
+                    ctx.roundRect(Math.round(this.x), Math.round(this.y), Math.round(this.width + paddingX * 2), Math.round(this.height + paddingY * 2), 10);                    ctx.stroke();
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.closePath();
+
+                    ctx.fillStyle = this.active ? 'rgb(143, 238, 114)':  this.on ? 'rgb(107, 142, 238)' : 'rgb(100, 100, 100)';
+                    ctx.fillText(this.value.toUpperCase(), Math.round(centerX), Math.round(centerY));  
+                    
+                    ctx.fillStyle = 'rgb(100, 100, 100)';
+                    ctx.strokeStyle = 'rgb(100, 100, 100)';
+
+                    this.children.forEach(child => child.draw())
+                }
+            }
+            
+            const root = new Node('Root', width / 3, 20);
+            root.on = true;
+
+            const raspiZero = new Node('Raspi zero')
+            root.insert(raspiZero);
+
+            const server = new Node('Server')
+            server.on = true;
+            server.addConnection(raspiZero)
+            root.insert(server);
+
+            const openAI = new Node('OpenAI')
+            server.insert(openAI);
+
+            const dashboard = new Node('Dashboard')
+            dashboard.active = true;
+            dashboard.on = true;
+            server.insert(dashboard);
+
+           const update = () => {
+                ctx.clearRect(100, 0, width, height);
+
+                root.drawConnections();
+                root.draw();
+           }
+
+           setInterval(update, 1 / 10)
+
+            const img = document.querySelector('.image')
+            // img.width = window.innerWidth;
+            // img.height = window.innerHeight;
+
+            const gestureState = document.querySelector('.gesture-state')
+            const prompt = document.querySelector('.prompt')
+            const completion = document.querySelector('.completion')
+            const systemStatus = document.querySelector('.system-status');
+            const time = document.querySelector('.time');
+            const websocketStatus = document.querySelector('.websocket-status');
+            const onlineLabel = document.querySelector('.online-label');
+
+           const setTime =  () => {
+                const date = new Date();
+                time.innerText = date.toLocaleTimeString();
+            }
+            setTime()
+            setInterval(setTime, 1000)
 
             const ws = new WebSocket(`ws://localhost:<VIEWER_PORT>`)
 
             ws.addEventListener('open', () => {
                 console.log('Connected to the server')
+                onlineLabel.innerText = 'ONLINE';
+                onlineLabel.classList.remove('offline');
+                onlineLabel.classList.add('online');
+
+                websocketStatus.classList.remove('offline');
+                websocketStatus.classList.add('online');
+
+                systemStatus.innerText = 'WAITING';
+                systemStatus.classList.remove('system-disconnected');
+                systemStatus.classList.add('system-waiting');
+
+                raspiZero.on = true;
+                raspiZero.active =true;
             })
 
             ws.addEventListener('message', (message) => {
-                img.src = message.data
+                const { type, data } = JSON.parse(message.data)
+                
+                switch (type) {
+                    case 'image':
+                        img.src = data
+                        img.style.width = '50%';
+
+                        break;
+
+                    case 'gestureState':
+                        gestureState.innerText = data.toUpperCase();
+
+                        break;
+
+                    case 'prompt':
+                        prompt.innerText = data.toUpperCase();
+
+                        break;
+
+                    case 'completion':
+                        completion.innerText = data.toUpperCase();
+
+                        break;
+
+                    case 'System Status':
+                        systemStatus.innerText = data.toUpperCase();
+                        sytsemStatus.classList.remove('system-processing', 'system-waiting')
+                        systemStatus.classList.add(data === 'Waiting' ? 'system-waiting' : 'system-processing')
+
+                        break;
+
+                    default:
+                        break;
+                
+                }
             });
         </script>
     </body>

@@ -6,29 +6,58 @@ import base64
 import websockets
 import socket
 import io
+import numpy as np
+from gpiozero import CPUTemperature
+from time import time as getTime
+
+cpu = CPUTemperature()
 
 picam2 = Picamera2()
+
+cameraConfig = picam2.create_preview_configuration(raw=picam2.sensor_modes[2])
+picam2.configure(cameraConfig)
+
 picam2.start()
 
-FRAME_RATE = 30
+FRAME_RATE = 10
+THROTTLE_TEMP = 65
 
 encoder = JpegEncoder()
 
 
-def getVideoFrame(cap):
+def getVideoFrame():
     data = io.BytesIO()
     picam2.capture_file(data, format="jpeg")
 
-    jpg_as_text = base64.b64encode(data.getvalue())
+    byteArray = data.getvalue()
 
-    return jpg_as_text
+    text = base64.b64encode(byteArray)
+
+    return text
 
 
 async def handleServer(websocket):
     print("Starting")
 
+    lastTime = getTime()
+
     while True:
-        data = getVideoFrame(cap)
+        # Throttling
+        temperature = cpu.temperature
+
+        if temperature > THROTTLE_TEMP:
+            FRAME_RATE = 5
+        else:
+            FRAME_RATE = 10
+
+        currTime = getTime()
+
+        if currTime - lastTime > 1:
+            print(temperature)
+
+            lastTime = currTime
+
+        data = getVideoFrame()
 
         if not data:
             return
@@ -42,25 +71,21 @@ async def handle(websocket):
     await asyncio.create_task(handleServer(websocket))
 
 
-async def wsClient(cap, IP):
-    server = await websockets.serve(handle, IP, 5000)
+async def wsClient(IP):
+    server = await websockets.serve(handle, IP, 8082)
 
     async with server:
         await asyncio.Future()
 
 
-cap = picam2
-
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.connect(("8.8.8.8", 80))
 
-# or socket.gethostbyname(socket.gethostname())
 IP = s.getsockname()[0]
 s.close()
 
-print(IP)
+print(f"Current IP: {IP}")
 
-asyncio.run(wsClient(cap, IP))
+asyncio.run(wsClient(IP))
 
-cap.release()
 picam2.release()
