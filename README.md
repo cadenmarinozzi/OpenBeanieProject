@@ -18,7 +18,7 @@ Run `cd OpenBeanieProject` in the terminal.
 
 ## Installing packages
 
-First, make sure you install any packages by running `npm install` in the terminal. Then, run `python3 install -r requirements.txt` in the terminal.
+First, make sure you install any packages by running `./install.sh` in the terminal.
 
 ## Running the code
 
