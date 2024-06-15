@@ -17,6 +17,7 @@
         "openai": "^4.33.0",
         "perspective-transform": "^1.1.3",
         "tesseract.js": "^5.0.5",
-        "tree-kill": "^1.2.2"
+        "tree-kill": "^1.2.2",
+        "uuid": "^10.0.0"
     }
 }

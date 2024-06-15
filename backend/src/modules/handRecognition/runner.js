@@ -4,38 +4,33 @@ import { createWebsocketURL } from '../utils/websockets.js';
 import { getConfig } from '../config/index.js';
 import colors from 'colors/safe.js';
 import kill from 'tree-kill';
+import { v4 as uuid } from 'uuid';
 
 const config = getConfig();
 const RECOGNIZER_PORT = config.network.recognizer.port;
 
 export class HandRecognition {
 	constructor() {
-		this.tasks = [];
+		this.tasks = {};
 	}
 
-	addRecognizeTask = (image) => {
-		this.ws.send(image);
+	addRecognizeTask = (image, callback) => {
+		const taskId = uuid();
 
-		const task = new Promise((resolve, reject) => {
-			this.ws.on('message', (message) => {
-				if (message === 'Hands') {
-					resolve(true);
-				} else if (message === 'No hands') {
-					resolve(false);
-				}
-			});
-		});
+		this.ws.send(
+			JSON.stringify({
+				taskId,
+				image,
+			})
+		);
 
-		this.tasks.push(task);
-
-		return task;
+		this.tasks[taskId] = callback;
 	};
 
 	handleMessage = (message) => {
-		// const handDetected = message === 'Hand detected';
-		// if (handDetected) {
-		// 	this.tasks[0].resolve(true);
-		// }
+		const data = JSON.parse(message);
+		this.tasks[data.taskId].callback(data.value === 'Hands');
+		delete this.tasks[data.taskId];
 	};
 
 	handleOpen = () => {
@@ -56,7 +51,7 @@ export class HandRecognition {
 					resolve();
 				});
 
-				// this.ws.on('message', this.handleMessage);
+				this.ws.on('message', this.handleMessage);
 			} catch (err) {
 				console.log(
 					colors.red('Failed to connect to recognizer websocket')
@@ -84,7 +79,11 @@ export class HandRecognition {
 	initPython = async () => {
 		return new Promise((resolve) => {
 			try {
-				process.on('SIGINT', this.killProcess);
+				process.on('SIGINT', () => {
+					this.killProcess();
+
+					process.exit();
+				});
 
 				this.pythonProcess = spawn('python', [
 					'src/modules/handRecognition/handRecognition.py',
@@ -99,6 +98,19 @@ export class HandRecognition {
 						);
 						resolve();
 					}
+
+					console.log(data.toString());
+				});
+
+				this.pythonProcess.stderr.on('data', (err) => {
+					if (err.toString().includes('Started')) {
+						console.log(
+							colors.green('Python process websocket open')
+						);
+						resolve();
+					}
+
+					console.log(err.toString());
 				});
 			} catch (err) {
 				console.log('Error starting python');

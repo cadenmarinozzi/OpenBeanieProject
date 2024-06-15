@@ -92,6 +92,51 @@ export default class ServerWebSocket {
 		return completion;
 	};
 
+	process = (currentTime, imageData) => {
+		this.viewer.sendData('status', 'Processing');
+
+		console.log(colors.blue('Processing...'));
+
+		this.lastDataTime = currentTime;
+
+		this.viewer.sendData('status', 'Getting gesture state');
+
+		this.handRecognizer.addRecognizeTask(imageData, async (handInFrame) => {
+			console.log(handInFrame);
+
+			if (!handInFrame) {
+				return;
+			}
+
+			// const gestureState = await this.getGestureState();
+			// console.log(
+			// 	colors.yellow(`Gesture State: ${gestureState}`)
+			// );
+			// this.viewer.sendData('gestureState', gestureState);
+
+			// const prompt = gesturePrompts[gestureState];
+
+			// if (!prompt) {
+			// 	return;
+			// }
+
+			// this.viewer.sendData('prompt', prompt);
+
+			// this.viewer.sendData('status', 'Generating completion');
+
+			// const completion = await this.getCompletion(prompt);
+			// this.viewer.sendData('completion', completion);
+			// console.log(colors.yellow(`Completion: ${completion}`));
+
+			// this.addToHistory(completion);
+
+			// this.viewer.sendData('status', 'Speaking');
+			// this.doTTS(completion);
+
+			// this.needsStatusSent = true;
+		});
+	};
+
 	handleMessage = async (data) => {
 		try {
 			// const imageData = await rotate90(data.toString());
@@ -110,46 +155,7 @@ export default class ServerWebSocket {
 				return;
 			}
 
-			this.viewer.sendData('status', 'Processing');
-
-			console.log(colors.blue('Processing...'));
-
-			this.lastDataTime = currentTime;
-
-			this.viewer.sendData('status', 'Getting gesture state');
-
-			const handInFrame = await this.handRecognizer.addRecognizeTask(
-				imageData
-			);
-
-			if (!handInFrame) {
-				return;
-			}
-
-			const gestureState = await this.getGestureState();
-			console.log(colors.yellow(`Gesture State: ${gestureState}`));
-			this.viewer.sendData('gestureState', gestureState);
-
-			const prompt = gesturePrompts[gestureState];
-
-			if (!prompt) {
-				return;
-			}
-
-			this.viewer.sendData('prompt', prompt);
-
-			this.viewer.sendData('status', 'Generating completion');
-
-			const completion = await this.getCompletion(prompt);
-			this.viewer.sendData('completion', completion);
-			console.log(colors.yellow(`Completion: ${completion}`));
-
-			this.addToHistory(completion);
-
-			this.viewer.sendData('status', 'Speaking');
-			this.doTTS(completion);
-
-			this.needsStatusSent = true;
+			this.process(currentTime, imageData);
 		} catch (err) {
 			console.error(colors.red(err));
 		}
