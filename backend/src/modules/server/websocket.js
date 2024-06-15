@@ -110,8 +110,6 @@ export default class ServerWebSocket {
 
 			this.viewer.sendData('status', 'Getting gesture state');
 
-			this.isProcessing = true;
-
 			const gestureState = await this.getGestureState();
 			console.log(colors.yellow(`Gesture State: ${gestureState}`));
 			this.viewer.sendData('gestureState', gestureState);
@@ -121,6 +119,8 @@ export default class ServerWebSocket {
 			if (!prompt) {
 				return;
 			}
+
+			this.isProcessing = true;
 
 			this.viewer.sendData('prompt', prompt);
 
