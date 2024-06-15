@@ -16,6 +16,8 @@ In the top left corner of VSCode, click the 3 dots and select `New Terminal`
 
 Run `./reclone.sh` in the terminal. This will delete the current code and download the latest version from GitHub.
 
+if you get an error saying `bla bla bla no such file or directory` you need to go back to the main directory. Do this by running `cd ../../`
+
 ## CD into the code
 
 Run `cd OpenBeanieProject` in the terminal.
