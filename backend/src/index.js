@@ -11,11 +11,15 @@ if (!fs.existsSync('temp')) {
 	fs.mkdirSync('temp');
 }
 
+process.on('SIGINT', () => {
+	process.exit();
+});
+
 const init = async () => {
 	const handRecognizer = new HandRecognition();
 
-	await handRecognizer.initPython();
-	await handRecognizer.initWebsocket();
+	handRecognizer.initWebsocket();
+	handRecognizer.initPython();
 
 	const viewer = new ViewerWebSocket();
 	viewer.init();

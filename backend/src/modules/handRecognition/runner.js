@@ -8,6 +8,7 @@ import { v4 as uuid } from 'uuid';
 
 const config = getConfig();
 const RECOGNIZER_PORT = config.network.recognizer.port;
+const RECONNECT_DELAY = config.reconnect_delay;
 
 export class HandRecognition {
 	constructor() {
@@ -16,53 +17,50 @@ export class HandRecognition {
 
 	addRecognizeTask = (image, callback) => {
 		const taskId = uuid();
-
-		this.ws.send(
-			JSON.stringify({
-				taskId,
-				image,
-			})
-		);
-
 		this.tasks[taskId] = callback;
+
+		this.wss.clients.forEach((client) => {
+			if (client.readyState === WebSocket.OPEN) {
+				client.send(
+					JSON.stringify({
+						taskId,
+						image,
+					})
+				);
+			}
+		});
 	};
 
 	handleMessage = (message) => {
-		const data = JSON.parse(message);
-		this.tasks[data.taskId].callback(data.value === 'Hands');
-		delete this.tasks[data.taskId];
+		if (message !== 'Connected') {
+			const data = JSON.parse(message);
+			this.tasks[data.taskId](data.value === 'Hands');
+			delete this.tasks[data.taskId];
+		}
 	};
 
-	handleOpen = () => {
-		console.log(colors.green('Python process websocket connected'));
+	handleConnection = (ws) => {
+		console.log(colors.green('Recognize client connected'));
+		ws.on('message', this.handleMessage);
 	};
 
-	initWebsocket = async () => {
-		return new Promise((resolve) => {
-			try {
-				this.ws = new WebSocket(
-					createWebsocketURL('127.0.0.1', RECOGNIZER_PORT)
-				);
+	initWebsocket = () => {
+		try {
+			this.wss = new WebSocket.Server({ port: RECOGNIZER_PORT });
 
-				console.log(colors.green('Started recognizer websocket'));
+			console.log(colors.green('Started recognizer websocket'));
 
-				this.ws.on('open', () => {
-					this.handleOpen();
-					resolve();
-				});
+			this.wss.on('connection', this.handleConnection);
+		} catch (err) {
+			console.log(
+				colors.red('Failed to connect to recognizer websocket')
+			);
+			console.log(colors.red(err));
 
-				this.ws.on('message', this.handleMessage);
-			} catch (err) {
-				console.log(
-					colors.red('Failed to connect to recognizer websocket')
-				);
-				console.log(colors.red(err));
-
-				setTimeout(() => {
-					this.initWebsocket();
-				}, 3000);
-			}
-		});
+			setTimeout(() => {
+				this.initWebsocket();
+			}, RECONNECT_DELAY);
+		}
 	};
 
 	killProcess = () => {
@@ -76,49 +74,37 @@ export class HandRecognition {
 		}
 	};
 
-	initPython = async () => {
-		return new Promise((resolve) => {
-			try {
-				process.on('SIGINT', () => {
-					this.killProcess();
-
-					process.exit();
-				});
-
-				this.pythonProcess = spawn('python', [
-					'src/modules/handRecognition/handRecognition.py',
-				]);
-
-				console.log(colors.green('Started python process'));
-
-				this.pythonProcess.stdout.on('data', (data) => {
-					if (data.toString().includes('Started')) {
-						console.log(
-							colors.green('Python process websocket open')
-						);
-						resolve();
-					}
-
-					console.log(data.toString());
-				});
-
-				this.pythonProcess.stderr.on('data', (err) => {
-					if (err.toString().includes('Started')) {
-						console.log(
-							colors.green('Python process websocket open')
-						);
-						resolve();
-					}
-
-					console.log(err.toString());
-				});
-			} catch (err) {
-				console.log('Error starting python');
-				console.log(colors.red(err));
-
+	initPython = () => {
+		try {
+			process.on('SIGINT', () => {
 				this.killProcess();
+			});
+
+			this.pythonProcess = spawn('python', [
+				'-u',
+				'src/modules/handRecognition/handRecognition.py',
+			]);
+
+			this.pythonProcess.stdout.on('data', (data) => {
+				console.log(data.toString());
+			});
+
+			this.pythonProcess.stderr.on('data', (data) => {
+				console.error(colors.red(data.toString()));
+			});
+
+			this.pythonProcess.on('close', () => {
+				console.log(colors.yellow('Python process closed'));
 				this.initPython();
-			}
-		});
+			});
+
+			console.log(colors.green('Started python process'));
+		} catch (err) {
+			console.log('Error starting python');
+			console.log(colors.red(err));
+
+			this.killProcess();
+			this.initPython();
+		}
 	};
 }

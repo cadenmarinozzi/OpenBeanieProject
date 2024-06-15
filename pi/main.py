@@ -52,7 +52,7 @@ async def handleServer(websocket):
 
         currTime = getTime()
 
-        if currTime - lastTime > 1:
+        if currTime - lastTime > 3:
             print(f"{temperature} °C")
 
             lastTime = currTime

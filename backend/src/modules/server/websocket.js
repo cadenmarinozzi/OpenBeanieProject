@@ -99,8 +99,6 @@ export default class ServerWebSocket {
 
 		this.lastDataTime = currentTime;
 
-		this.viewer.sendData('status', 'Getting gesture state');
-
 		this.handRecognizer.addRecognizeTask(imageData, async (handInFrame) => {
 			console.log(handInFrame);
 
@@ -108,38 +106,37 @@ export default class ServerWebSocket {
 				return;
 			}
 
-			// const gestureState = await this.getGestureState();
-			// console.log(
-			// 	colors.yellow(`Gesture State: ${gestureState}`)
-			// );
-			// this.viewer.sendData('gestureState', gestureState);
+			this.viewer.sendData('status', 'Getting gesture state');
 
-			// const prompt = gesturePrompts[gestureState];
+			const gestureState = await this.getGestureState();
+			console.log(colors.yellow(`Gesture State: ${gestureState}`));
+			this.viewer.sendData('gestureState', gestureState);
 
-			// if (!prompt) {
-			// 	return;
-			// }
+			const prompt = gesturePrompts[gestureState];
 
-			// this.viewer.sendData('prompt', prompt);
+			if (!prompt) {
+				return;
+			}
 
-			// this.viewer.sendData('status', 'Generating completion');
+			this.viewer.sendData('prompt', prompt);
 
-			// const completion = await this.getCompletion(prompt);
-			// this.viewer.sendData('completion', completion);
-			// console.log(colors.yellow(`Completion: ${completion}`));
+			this.viewer.sendData('status', 'Generating completion');
 
-			// this.addToHistory(completion);
+			const completion = await this.getCompletion(prompt);
+			this.viewer.sendData('completion', completion);
+			console.log(colors.yellow(`Completion: ${completion}`));
 
-			// this.viewer.sendData('status', 'Speaking');
-			// this.doTTS(completion);
+			this.addToHistory(completion);
 
-			// this.needsStatusSent = true;
+			this.viewer.sendData('status', 'Speaking');
+			this.doTTS(completion);
+
+			this.needsStatusSent = true;
 		});
 	};
 
 	handleMessage = async (data) => {
 		try {
-			// const imageData = await rotate90(data.toString());
 			const imageData = data.toString();
 			this.image = imageDataToBase64(imageData);
 			this.viewer.sendData('image', this.image);
@@ -164,6 +161,10 @@ export default class ServerWebSocket {
 	init = async () => {
 		try {
 			this.ws = new WebSocket(createWebsocketURL(PI_IP, PI_PORT));
+
+			process.on('SIGINT', () => {
+				this.ws.close();
+			});
 
 			this.ws.on('open', this.handleOpen);
 			this.ws.on('message', this.handleMessage);

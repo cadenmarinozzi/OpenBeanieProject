@@ -1,5 +1,5 @@
 {
-    "process_rate": 0.1,
+    "process_rate": 1,
     "reconnect_delay": 3000,
     "history": {
         "persistent": false,
@@ -17,7 +17,7 @@
             "port": 8080
         },
         "recognizer": {
-            "port": 8082
+            "port": 3500
         }
     },
     "tts": {

@@ -1,28 +1,33 @@
 import cv2
 import mediapipe as mp
-import asyncio
-import websockets
 import json
-import sys
+import numpy as np
+from async_websocket_client.apps import AsyncWebSocketApp
+from async_websocket_client.dispatchers import BaseDispatcher
+import base64
 
 mpHands = mp.solutions.hands
 hands = mpHands.Hands()
 
+RECOGNIZER_PORT = 3500
 
-async def handleServer(websocket):
-    async for jsonData in websocket:  # base64 image
-        data = json.loads(jsonData)
+
+class Handler(BaseDispatcher):
+    async def on_connect(self):
+        return await self.ws.send("Connected")
+
+    async def on_message(self, message):
+        data = json.loads(message)
 
         taskId = data["taskId"]
         imageData = data["image"]
 
-        image = cv2.imread(imageData)
+        imageData = np.frombuffer(base64.b64decode(imageData), np.uint8)
+        image = cv2.imdecode(imageData, cv2.IMREAD_COLOR)
         frameRGB = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         results = hands.process(frameRGB)
 
-        print("aaa")
-
-        await websocket.send(
+        return await self.ws.send(
             json.dumps(
                 {
                     "taskId": taskId,
@@ -32,20 +37,5 @@ async def handleServer(websocket):
         )
 
 
-async def handle(websocket):
-    await asyncio.create_task(handleServer(websocket))
-
-
-async def wsClient(IP):
-    print("Started")
-    server = await websockets.serve(handle, IP, 8082)
-
-    try:
-        async with server:
-            await asyncio.Future()
-    except KeyboardInterrupt:
-        server.close()
-        sys.exit()
-
-
-asyncio.run(wsClient("127.0.0.1"))
+client = AsyncWebSocketApp(f"ws://localhost:{RECOGNIZER_PORT}", Handler())
+client.asyncio_run()
