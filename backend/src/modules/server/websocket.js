@@ -100,13 +100,17 @@ export default class ServerWebSocket {
 		this.lastDataTime = currentTime;
 
 		this.handRecognizer.addRecognizeTask(imageData, async (handInFrame) => {
-			console.log(handInFrame);
+			if (this.isProcessing) return;
+
+			console.log('Hand in frame: ', handInFrame);
 
 			if (!handInFrame) {
 				return;
 			}
 
 			this.viewer.sendData('status', 'Getting gesture state');
+
+			this.isProcessing = true;
 
 			const gestureState = await this.getGestureState();
 			console.log(colors.yellow(`Gesture State: ${gestureState}`));
@@ -131,6 +135,7 @@ export default class ServerWebSocket {
 			this.viewer.sendData('status', 'Speaking');
 			this.doTTS(completion);
 
+			this.isProcessing = false;
 			this.needsStatusSent = true;
 		});
 	};

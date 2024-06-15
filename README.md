@@ -1,5 +1,9 @@
 # Server
 
+# HANDLING ERRORS
+
+Remember that not all text printed to the console, even red text, is not an error. If the program is running, it is running. If you are getting an error, it will be clear. If you are not sure, ask someone else.
+
 ## Open the code
 
 In VSCode, open the `Beanie` folder, NOT THE `OpenBeanieProject` FOLDER!!!!!!
