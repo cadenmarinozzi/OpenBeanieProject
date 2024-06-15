@@ -21,6 +21,10 @@ Run `cd OpenBeanieProject` in the terminal.
 First, make sure you install any packages by running `./install.sh` in the terminal.
 IF YOU ARE GETTING ERRORS, TRY RUNNING THESE COMMANDS IN THE TERMINAL: `npm install` and then `pip3 install -r requirements.txt`
 
+# CD into the backend directory
+
+Run `cd backend` in the terminal.
+
 ## Running the code
 
 Run `npm start` in the terminal.

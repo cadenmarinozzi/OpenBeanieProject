@@ -1,4 +1,3 @@
-from simpleSound import play
 from dotenv import load_dotenv
 from ibm_watson import TextToSpeechV1
 from ibm_watson.websocket import SynthesizeCallback
