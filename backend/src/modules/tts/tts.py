@@ -20,6 +20,7 @@ service = TextToSpeechV1(authenticator=authenticator)
 service.set_service_url(SERVICE_URL)
 
 text = sys.argv[1]
+print(text)
 
 
 def formatForTTS(text):
@@ -43,6 +44,7 @@ class TTSSynthesizeCallback(SynthesizeCallback):
         print("Error received: {}".format(error))
 
     def on_audio_stream(self, audioStream):
+        # print(audioStream)
         if self.firstChunk:
             self.firstChunk = False
 

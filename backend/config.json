@@ -21,6 +21,6 @@
         }
     },
     "tts": {
-        "stream": true
+        "stream": false
     }
 }
