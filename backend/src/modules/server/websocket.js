@@ -133,7 +133,7 @@ export default class ServerWebSocket {
 			this.addToHistory(completion);
 
 			this.viewer.sendData('status', 'Speaking');
-			this.doTTS(completion);
+			await this.doTTS(completion);
 
 			this.isProcessing = false;
 			this.needsStatusSent = true;
