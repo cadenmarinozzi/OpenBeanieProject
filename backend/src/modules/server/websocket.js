@@ -10,6 +10,7 @@ import { imageDataToBase64 } from '../utils/images.js';
 import colors from 'colors/safe.js';
 import { runTTS } from '../tts/runner.js';
 import { HandRecognition } from '../handRecognition/runner.js';
+import { generateTTSAudio } from '../tts/index.js';
 const config = getConfig();
 
 const PI_IP = config.network.pi.ip;
