@@ -48,12 +48,10 @@ class TTSSynthesizeCallback(SynthesizeCallback):
 
             return
 
-        print(audioStream)
-
         self.stream.write(audioStream)
 
     def on_close(self):
-        print("done")
+        print("closed")
 
     def createStream(self):
         self.firstChunk = True
