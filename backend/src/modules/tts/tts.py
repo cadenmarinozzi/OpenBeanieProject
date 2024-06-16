@@ -9,7 +9,7 @@ import sys
 load_dotenv()
 
 WATSON_API_KEY = os.getenv("WATSON_API_KEY")
-SERVICE_URL = "https://api.us-south.text-to-speech.watson.cloud.ibm.com"
+SERVICE_URL = os.getenv("WATSON_SERVICE_URL")
 
 CHANNELS = 1
 RATE = 22050  # WAV Audio rate
@@ -51,6 +51,9 @@ class TTSSynthesizeCallback(SynthesizeCallback):
         print(audioStream)
 
         self.stream.write(audioStream)
+
+    def on_close(self):
+        print("done")
 
     def createStream(self):
         self.firstChunk = True

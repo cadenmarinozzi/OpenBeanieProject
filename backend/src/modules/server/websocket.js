@@ -134,6 +134,7 @@ export default class ServerWebSocket {
 
 			this.viewer.sendData('status', 'Speaking');
 			await this.doTTS(completion);
+
 			this.isProcessing = false;
 			this.needsStatusSent = true;
 		});
