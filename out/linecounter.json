@@ -1,0 +1,257 @@
+{
+    "extension": "linecounter",
+    "version": "0.2.7",
+    "workspace": "/Users/cadenm/Desktop/Code/BeanieMF",
+    "linecount": [
+        {
+            "version": "0.2.7",
+            "counttime": "2024-06-16 17:31:06",
+            "filesum": 33,
+            "codesum": 4458,
+            "commentsum": 7,
+            "blanksum": 348,
+            "statistics": {
+                ".py": {
+                    "code": 203,
+                    "comment": 4,
+                    "blank": 102
+                },
+                ".md": {
+                    "code": 32,
+                    "comment": 1,
+                    "blank": 29
+                },
+                "": {
+                    "code": 12,
+                    "comment": 1,
+                    "blank": 0
+                },
+                ".json": {
+                    "code": 3331,
+                    "comment": 0,
+                    "blank": 1
+                },
+                ".js": {
+                    "code": 515,
+                    "comment": 1,
+                    "blank": 117
+                },
+                ".html": {
+                    "code": 350,
+                    "comment": 0,
+                    "blank": 99
+                },
+                ".sh": {
+                    "code": 3,
+                    "comment": 0,
+                    "blank": 0
+                },
+                ".txt": {
+                    "code": 12,
+                    "comment": 0,
+                    "blank": 0
+                }
+            },
+            "filelist": [
+                {
+                    "blank": 0,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": ".gitignore"
+                },
+                {
+                    "blank": 0,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": ".prettierignore"
+                },
+                {
+                    "blank": 0,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": ".prettierrc.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 3,
+                    "comment": 1,
+                    "filename": "backend/.env"
+                },
+                {
+                    "blank": 0,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "backend/config.json"
+                },
+                {
+                    "blank": 1,
+                    "code": 3272,
+                    "comment": 0,
+                    "filename": "backend/package-lock.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "backend/package.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 12,
+                    "comment": 0,
+                    "filename": "backend/requirements.txt"
+                },
+                {
+                    "blank": 9,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "backend/src/index.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 3,
+                    "comment": 0,
+                    "filename": "backend/src/modules/actions/index.js"
+                },
+                {
+                    "blank": 8,
+                    "code": 33,
+                    "comment": 0,
+                    "filename": "backend/src/modules/client/viewerServer.js"
+                },
+                {
+                    "blank": 8,
+                    "code": 44,
+                    "comment": 0,
+                    "filename": "backend/src/modules/client/viewerWebsocket.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "backend/src/modules/config/index.js"
+                },
+                {
+                    "blank": 11,
+                    "code": 22,
+                    "comment": 0,
+                    "filename": "backend/src/modules/crop/crop.py"
+                },
+                {
+                    "blank": 3,
+                    "code": 19,
+                    "comment": 0,
+                    "filename": "backend/src/modules/crop/runner.js"
+                },
+                {
+                    "blank": 10,
+                    "code": 31,
+                    "comment": 0,
+                    "filename": "backend/src/modules/handRecognition/handRecognition.py"
+                },
+                {
+                    "blank": 20,
+                    "code": 90,
+                    "comment": 0,
+                    "filename": "backend/src/modules/handRecognition/runner.js"
+                },
+                {
+                    "blank": 3,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "backend/src/modules/ocr/index.js"
+                },
+                {
+                    "blank": 5,
+                    "code": 19,
+                    "comment": 0,
+                    "filename": "backend/src/modules/openai/index.js"
+                },
+                {
+                    "blank": 44,
+                    "code": 153,
+                    "comment": 0,
+                    "filename": "backend/src/modules/server/websocket.js"
+                },
+                {
+                    "blank": 7,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "backend/src/modules/tts/index.js"
+                },
+                {
+                    "blank": 3,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "backend/src/modules/tts/runner.js"
+                },
+                {
+                    "blank": 23,
+                    "code": 58,
+                    "comment": 2,
+                    "filename": "backend/src/modules/tts/tts.py"
+                },
+                {
+                    "blank": 2,
+                    "code": 53,
+                    "comment": 0,
+                    "filename": "backend/src/modules/utils/completions.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": "backend/src/modules/utils/constants.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 3,
+                    "comment": 0,
+                    "filename": "backend/src/modules/utils/images.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": "backend/src/modules/utils/rotateImage.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 1,
+                    "filename": "backend/src/modules/utils/websockets.js"
+                },
+                {
+                    "blank": 99,
+                    "code": 350,
+                    "comment": 0,
+                    "filename": "backend/viewer/index.html"
+                },
+                {
+                    "blank": 0,
+                    "code": 3,
+                    "comment": 0,
+                    "filename": "install.sh"
+                },
+                {
+                    "blank": 34,
+                    "code": 56,
+                    "comment": 1,
+                    "filename": "pi/main.py"
+                },
+                {
+                    "blank": 24,
+                    "code": 36,
+                    "comment": 1,
+                    "filename": "pi/test.py"
+                },
+                {
+                    "blank": 29,
+                    "code": 32,
+                    "comment": 1,
+                    "filename": "README.md"
+                }
+            ]
+        }
+    ]
+}

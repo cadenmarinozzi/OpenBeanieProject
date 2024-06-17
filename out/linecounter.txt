@@ -1,0 +1,57 @@
+===============================================================================
+EXTENSION NAME : linecounter
+EXTENSION VERSION : 0.2.7
+-------------------------------------------------------------------------------
+count time : 2024-06-16 17:31:06
+count workspace : /Users/cadenm/Desktop/Code/BeanieMF
+total files : 33
+total code lines : 4458
+total comment lines : 7
+total blank lines : 348
+
+    statistics
+   |      extension|     total code|  total comment|    total blank|percent|
+   -------------------------------------------------------------------------
+   |            .py|            203|              4|            102|    4.6|
+   |            .md|             32|              1|             29|   0.72|
+   |               |             12|              1|              0|   0.27|
+   |          .json|           3331|              0|              1|     75|
+   |            .js|            515|              1|            117|     12|
+   |          .html|            350|              0|             99|    7.9|
+   |            .sh|              3|              0|              0|  0.067|
+   |           .txt|             12|              0|              0|   0.27|
+   -------------------------------------------------------------------------
+.gitignore, code is 7, comment is 0, blank is 0.
+.prettierignore, code is 2, comment is 0, blank is 0.
+.prettierrc.json, code is 10, comment is 0, blank is 0.
+backend/.env, code is 3, comment is 1, blank is 0.
+backend/config.json, code is 26, comment is 0, blank is 0.
+backend/package-lock.json, code is 3272, comment is 0, blank is 1.
+backend/package.json, code is 23, comment is 0, blank is 0.
+backend/requirements.txt, code is 12, comment is 0, blank is 0.
+backend/src/index.js, code is 25, comment is 0, blank is 9.
+backend/src/modules/actions/index.js, code is 3, comment is 0, blank is 0.
+backend/src/modules/client/viewerServer.js, code is 33, comment is 0, blank is 8.
+backend/src/modules/client/viewerWebsocket.js, code is 44, comment is 0, blank is 8.
+backend/src/modules/config/index.js, code is 5, comment is 0, blank is 2.
+backend/src/modules/crop/crop.py, code is 22, comment is 0, blank is 11.
+backend/src/modules/crop/runner.js, code is 19, comment is 0, blank is 3.
+backend/src/modules/handRecognition/handRecognition.py, code is 31, comment is 0, blank is 10.
+backend/src/modules/handRecognition/runner.js, code is 90, comment is 0, blank is 20.
+backend/src/modules/ocr/index.js, code is 7, comment is 0, blank is 3.
+backend/src/modules/openai/index.js, code is 19, comment is 0, blank is 5.
+backend/src/modules/server/websocket.js, code is 153, comment is 0, blank is 44.
+backend/src/modules/tts/index.js, code is 25, comment is 0, blank is 7.
+backend/src/modules/tts/runner.js, code is 16, comment is 0, blank is 3.
+backend/src/modules/tts/tts.py, code is 58, comment is 2, blank is 23.
+backend/src/modules/utils/completions.js, code is 53, comment is 0, blank is 2.
+backend/src/modules/utils/constants.js, code is 8, comment is 0, blank is 0.
+backend/src/modules/utils/images.js, code is 3, comment is 0, blank is 0.
+backend/src/modules/utils/rotateImage.js, code is 8, comment is 0, blank is 2.
+backend/src/modules/utils/websockets.js, code is 4, comment is 1, blank is 1.
+backend/viewer/index.html, code is 350, comment is 0, blank is 99.
+install.sh, code is 3, comment is 0, blank is 0.
+pi/main.py, code is 56, comment is 1, blank is 34.
+pi/test.py, code is 36, comment is 1, blank is 24.
+README.md, code is 32, comment is 1, blank is 29.
+===============================================================================
