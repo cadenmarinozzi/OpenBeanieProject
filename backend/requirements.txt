@@ -2,7 +2,7 @@ ibm_cloud_sdk_core==3.16.5
 ibm_watson==7.0.0
 imutils==0.5.4
 mediapipe==0.10.14
-opencv_python==4.8.0.76
+opencv_python==4.8.1.78
 PyAudio==0.2.13
 async_websocket_client==0.1.0
 numpy==1.24.3
